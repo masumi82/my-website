@@ -154,47 +154,63 @@ function canFormMelds(counts, order) {
 }
 
 /*===============================
-  クイズ機能（清一色）
+  クイズ機能（清一色：ランダム生成版）
 ===============================*/
 // クイズ用タイル順序（数字のみ）
 const quizTileOrder = ["1","2","3","4","5","6","7","8","9"];
-// クイズ用パターン（完成形14枚の和了形と、待ち牌となるペアの牌）
-const patterns = [
-  {
-    // パターン1:
-    // Melds: [1,2,3], [2,3,4], [4,5,6], [6,7,8], Pair: [9,9]
-    completeHand: ["1","2","3", "2","3","4", "4","5","6", "6","7","8", "9","9"],
-    answer: "9"
-  },
-  {
-    // パターン2:
-    // Melds: [1,2,3], [3,4,5], [5,6,7], [7,8,9], Pair: [2,2]
-    completeHand: ["1","2","3", "3","4","5", "5","6","7", "7","8","9", "2","2"],
-    answer: "2"
-  },
-  {
-    // パターン3:
-    // Melds: [1,2,3], [3,4,5], [5,6,7], [7,8,9], Pair: [4,4]
-    completeHand: ["1","2","3", "3","4","5", "5","6","7", "7","8","9", "4","4"],
-    answer: "4"
-  }
-];
-
 let quizCurrentAnswer = "";
 
-// クイズ生成
+// 新しいクイズ生成関数
 function generateQuiz() {
-  const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-  let hand = pattern.completeHand.slice();
-  // 正解（ペア）のうち1枚を削除して13枚にする
-  const index = hand.indexOf(pattern.answer);
-  if (index > -1) {
-    hand.splice(index, 1);
+  // 乱数で、各タイルの出現数が最大4枚までのランダムな13枚の手牌を生成
+  let hand = [];
+  let counts = {};
+  quizTileOrder.forEach(tile => { counts[tile] = 0; });
+  while (hand.length < 13) {
+    let tile = quizTileOrder[Math.floor(Math.random() * quizTileOrder.length)];
+    if (counts[tile] < 4) {
+      hand.push(tile);
+      counts[tile]++;
+    }
   }
+  // ソートして表示（定義順）
   hand.sort((a, b) => quizTileOrder.indexOf(a) - quizTileOrder.indexOf(b));
   document.getElementById("quizHand").innerText = hand.join(" ");
   document.getElementById("quizAnswer").innerText = "";
-  quizCurrentAnswer = pattern.answer;
+  
+  // 待ち牌を判定
+  let waits = [];
+  quizTileOrder.forEach(tile => {
+    let newHand = hand.slice();
+    newHand.push(tile);
+    if (isQuizWinning(newHand)) {
+      waits.push(tile);
+    }
+  });
+  
+  quizCurrentAnswer = waits.length === 0 ? "待ちがありません" : waits.join(" ");
+}
+
+// 新しい和了判定関数（クイズ用）
+// （チェッカーと同じアルゴリズムを利用）
+function isQuizWinning(tiles) {
+  const validCounts = [2, 5, 8, 11, 14];
+  if (!validCounts.includes(tiles.length)) return false;
+  let counts = {};
+  tiles.forEach(tile => {
+    counts[tile] = (counts[tile] || 0) + 1;
+  });
+  for (let tile of quizTileOrder) {
+    if (counts[tile] >= 2) {
+      counts[tile] -= 2;
+      if (canFormMelds(counts, quizTileOrder)) {
+        counts[tile] += 2;
+        return true;
+      }
+      counts[tile] += 2;
+    }
+  }
+  return false;
 }
 
 // クイズ結果表示
