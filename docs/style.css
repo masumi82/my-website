@@ -1,3 +1,4 @@
+/* 共通設定 */
 body {
   font-family: 'Roboto', sans-serif;
   background: linear-gradient(135deg, #FFF5E1, #FFEBD6);
@@ -5,22 +6,42 @@ body {
   padding: 0;
   color: #333;
 }
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 10px;
-  background: rgba(255,255,255,0.95);
-  min-height: 100vh;
-  box-shadow: 0 0 20px rgba(0,0,0,0.2);
-  border-radius: 10px;
-}
-h1 {
+h1, h2 {
   text-align: center;
+}
+h2 {
   font-size: 24px;
   color: #B22222;
-  margin: 10px 0;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  margin-bottom: 10px;
 }
+
+/* タブメニュー */
+.tab-container {
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.tab {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  background: #f0f0f0;
+  font-size: 18px;
+  transition: background 0.3s;
+}
+.tab.active {
+  background: #FF1493;
+  color: #fff;
+}
+
+/* モード用コンテナ */
+.mode {
+  padding: 20px;
+}
+
+/* 待ち牌チェッカー用：タイルボタン */
 .tiles {
   display: flex;
   flex-wrap: wrap;
@@ -41,6 +62,8 @@ h1 {
 .tile-btn:hover {
   background: #FFC0CB;
 }
+
+/* 待ち牌チェッカー用：配牌表示 */
 .hand-display {
   margin: 10px 0;
   padding: 10px;
@@ -61,14 +84,16 @@ h1 {
   background: #FFE4E1;
   cursor: pointer;
 }
+
+/* コントロール＆結果表示 */
 .controls {
   text-align: center;
-  margin: 10px 0;
+  margin: 20px 0;
 }
 .control-btn {
-  padding: 10px 15px;
-  margin: 5px;
-  font-size: 16px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 18px;
   border: none;
   border-radius: 8px;
   background: #FF1493;
@@ -79,7 +104,7 @@ h1 {
 .control-btn:hover {
   background: #C71585;
 }
-.result {
+.result, .answer {
   text-align: center;
   font-size: 20px;
   margin-top: 15px;
@@ -88,9 +113,14 @@ h1 {
   border-radius: 8px;
   background: #FFF5F5;
 }
-.note {
-  font-size: 14px;
-  text-align: center;
-  margin-top: 10px;
-  color: #555;
+
+/* クイズ用：配牌表示 */
+.quiz-hand {
+  margin: 20px 0;
+  padding: 10px;
+  border: 2px solid #8B0000;
+  border-radius: 8px;
+  background: #FFE4E1;
+  font-size: 24px;
+  min-height: 50px;
 }
