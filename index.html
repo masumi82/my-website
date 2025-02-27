@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麻雀 待ち配牌チェッカー（動的更新＆ソート版）</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #FFF5E1, #FFEBD6);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 10px;
+      background: rgba(255,255,255,0.95);
+      min-height: 100vh;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+    h1 {
+      font-family: 'Noto Serif JP', serif;
+      text-align: center;
+      font-size: 24px;
+      color: #B22222;
+      margin: 10px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .tiles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .tile-btn {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      font-size: 20px;
+      border: 2px solid #FF69B4;
+      border-radius: 8px;
+      background: #FFF0F5;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .tile-btn:hover {
+      background: #FFC0CB;
+    }
+    .hand-display {
+      margin: 10px 0;
+      padding: 10px;
+      border: 2px solid #8B0000;
+      border-radius: 8px;
+      background: #FFE4E1;
+      min-height: 50px;
+      font-size: 22px;
+      text-align: center;
+    }
+    .hand-tile {
+      display: inline-block;
+      padding: 5px;
+      margin: 3px;
+      font-size: 22px;
+      border: 2px solid #8B0000;
+      border-radius: 8px;
+      background: #FFE4E1;
+      cursor: pointer;
+    }
+    .controls {
+      text-align: center;
+      margin: 10px 0;
+    }
+    button.control-btn {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #FF1493;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button.control-btn:hover {
+      background: #C71585;
+    }
+    .result {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 15px;
+      padding: 10px;
+      border: 2px dashed #B22222;
+      border-radius: 8px;
+      background: #FFF5F5;
+    }
+    .note {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>麻雀 待ち配牌チェッカー</h1>
+
+  <!-- 牌ボタンエリア -->
+  <div class="tiles">
+    <button class="tile-btn" onclick="addTile('1')">1</button>
+    <button class="tile-btn" onclick="addTile('2')">2</button>
+    <button class="tile-btn" onclick="addTile('3')">3</button>
+    <button class="tile-btn" onclick="addTile('4')">4</button>
+    <button class="tile-btn" onclick="addTile('5')">5</button>
+    <button class="tile-btn" onclick="addTile('6')">6</button>
+    <button class="tile-btn" onclick="addTile('7')">7</button>
+    <button class="tile-btn" onclick="addTile('8')">8</button>
+    <button class="tile-btn" onclick="addTile('9')">9</button>
+    <button class="tile-btn" onclick="addTile('東')">東</button>
+    <button class="tile-btn" onclick="addTile('南')">南</button>
+    <button class="tile-btn" onclick="addTile('西')">西</button>
+    <button class="tile-btn" onclick="addTile('北')">北</button>
+    <button class="tile-btn" onclick="addTile('白')">白</button>
+    <button class="tile-btn" onclick="addTile('発')">発</button>
+    <button class="tile-btn" onclick="addTile('中')">中</button>
+  </div>
+
+  <!-- 入力済み配牌表示 -->
+  <div class="hand-display" id="handDisplay">
+    ※ここに配牌が表示されます
+  </div>
+
+  <!-- コントロールボタン（クリアのみ） -->
+  <div class="controls">
+    <button class="control-btn" onclick="clearHand()">クリア</button>
+  </div>
+
+  <!-- 待ち結果表示 -->
+  <div class="result" id="result">
+    待ち牌がここに表示されます
+  </div>
+
+  <div class="note">
+    ※入力は、1,4,7,10,13枚のいずれかにしてください。<br>
+    （不足分は既に面子完成済みとみなします）
+  </div>
+</div>
+
+<script>
+  // ソート順（数字→字牌）
+  const tileOrder = ["1","2","3","4","5","6","7","8","9","東","南","西","北","白","発","中"];
+  
+  // 現在の配牌（不完全な部分）の配列
+  let hand = [];
+
+  // 牌を追加（タップ時）
+  function addTile(tile) {
+    hand.push(tile);
+    updateHandDisplay();
+  }
+
+  // 配牌表示エリアを更新（各牌はクリックで削除可能）
+  function updateHandDisplay() {
+    // 追加した牌をソート
+    hand.sort((a, b) => tileOrder.indexOf(a) - tileOrder.indexOf(b));
+
+    const handDisplay = document.getElementById("handDisplay");
+    handDisplay.innerHTML = "";
+    if (hand.length === 0) {
+      handDisplay.innerText = "※ここに配牌が表示されます";
+    } else {
+      hand.forEach((tile, index) => {
+        const span = document.createElement("span");
+        span.innerText = tile;
+        span.className = "hand-tile";
+        span.onclick = () => removeTile(index);
+        handDisplay.appendChild(span);
+      });
+    }
+    // 配牌更新時に自動で待ち判定
+    checkWait();
+  }
+
+  // 牌を削除
+  function removeTile(index) {
+    hand.splice(index, 1);
+    updateHandDisplay();
+  }
+
+  // 配牌をクリア
+  function clearHand() {
+    hand = [];
+    updateHandDisplay();
+    document.getElementById("result").innerText = "待ち牌がここに表示されます";
+  }
+
+  // 待ち牌判定
+  function checkWait() {
+    const allowedInputCounts = [1, 4, 7, 10, 13];
+    const resultDiv = document.getElementById("result");
+    if (!allowedInputCounts.includes(hand.length)) {
+      resultDiv.innerText = "入力枚数が不正です（1,4,7,10,13枚のいずれか）";
+      return;
+    }
+    const candidates = ["1","2","3","4","5","6","7","8","9","東","南","西","北","白","発","中"];
+    let waits = [];
+    candidates.forEach(tile => {
+      let newHand = hand.slice();
+      newHand.push(tile);
+      if (isWinning(newHand)) {
+        waits.push(tile);
+      }
+    });
+    if (waits.length === 0) {
+      resultDiv.innerText = "待ちがありません";
+    } else {
+      resultDiv.innerText = "待ち: " + waits.join(" ");
+    }
+  }
+
+  // 和了判定：牌リストが完成形（対子＋メンツで分解可能）なら true を返す
+  function isWinning(tiles) {
+    const validCounts = [2, 5, 8, 11, 14]; // 完成形の牌枚数
+    if (!validCounts.includes(tiles.length)) return false;
+    let counts = {};
+    tiles.forEach(tile => {
+      counts[tile] = (counts[tile] || 0) + 1;
+    });
+    for (let tile of tileOrder) {
+      if (counts[tile] >= 2) {
+        counts[tile] -= 2;
+        if (canFormMelds(counts, tileOrder)) {
+          counts[tile] += 2;
+          return true;
+        }
+        counts[tile] += 2;
+      }
+    }
+    return false;
+  }
+
+  // 再帰的に、残った牌群が刻子または順子（数字牌の場合）に分解できるかチェック
+  function canFormMelds(counts, order) {
+    // すべての牌のカウントが 0 なら成功
+    let done = true;
+    for (let key in counts) {
+      if (counts[key] > 0) { done = false; break; }
+    }
+    if (done) return true;
+
+    for (let tile of order) {
+      if (counts[tile] && counts[tile] > 0) {
+        // 刻子の可能性：同じ牌が3枚以上
+        if (counts[tile] >= 3) {
+          counts[tile] -= 3;
+          if (canFormMelds(counts, order)) {
+            counts[tile] += 3;
+            return true;
+          }
+          counts[tile] += 3;
+        }
+        // 数牌の場合、順子の可能性（連続3枚）をチェック
+        if ("123456789".includes(tile)) {
+          let num = parseInt(tile);
+          if (num <= 7) {
+            let t2 = (num + 1).toString();
+            let t3 = (num + 2).toString();
+            if ((counts[t2] || 0) > 0 && (counts[t3] || 0) > 0) {
+              counts[tile]--;
+              counts[t2]--;
+              counts[t3]--;
+              if (canFormMelds(counts, order)) {
+                counts[tile]++;
+                counts[t2]++;
+                counts[t3]++;
+                return true;
+              }
+              counts[tile]++;
+              counts[t2]++;
+              counts[t3]++;
+            }
+          }
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+</script>
+</body>
+</html>
