@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麻雀 待ち配牌チェッカー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>麻雀 待ち配牌チェッカー</h1>
+
+    <!-- 牌ボタンエリア -->
+    <div class="tiles">
+      <button class="tile-btn" onclick="addTile('1')">1</button>
+      <button class="tile-btn" onclick="addTile('2')">2</button>
+      <button class="tile-btn" onclick="addTile('3')">3</button>
+      <button class="tile-btn" onclick="addTile('4')">4</button>
+      <button class="tile-btn" onclick="addTile('5')">5</button>
+      <button class="tile-btn" onclick="addTile('6')">6</button>
+      <button class="tile-btn" onclick="addTile('7')">7</button>
+      <button class="tile-btn" onclick="addTile('8')">8</button>
+      <button class="tile-btn" onclick="addTile('9')">9</button>
+      <button class="tile-btn" onclick="addTile('東')">東</button>
+      <button class="tile-btn" onclick="addTile('南')">南</button>
+      <button class="tile-btn" onclick="addTile('西')">西</button>
+      <button class="tile-btn" onclick="addTile('北')">北</button>
+      <button class="tile-btn" onclick="addTile('白')">白</button>
+      <button class="tile-btn" onclick="addTile('発')">発</button>
+      <button class="tile-btn" onclick="addTile('中')">中</button>
+    </div>
+
+    <!-- 入力済み配牌表示 -->
+    <div class="hand-display" id="handDisplay">
+      ※ここに配牌が表示されます
+    </div>
+
+    <!-- コントロールボタン -->
+    <div class="controls">
+      <button class="control-btn" onclick="clearHand()">クリア</button>
+    </div>
+
+    <!-- 待ち結果表示 -->
+    <div class="result" id="result">
+      待ち牌がここに表示されます
+    </div>
+
+    <div class="note">
+      ※入力は、1,4,7,10,13枚のいずれかにしてください。<br>
+      （不足分は既に面子完成済みとみなします）
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

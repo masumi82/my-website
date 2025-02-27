@@ -1,0 +1,96 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #FFF5E1, #FFEBD6);
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+  background: rgba(255,255,255,0.95);
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+h1 {
+  text-align: center;
+  font-size: 24px;
+  color: #B22222;
+  margin: 10px 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.tile-btn {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  font-size: 20px;
+  border: 2px solid #FF69B4;
+  border-radius: 8px;
+  background: #FFF0F5;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tile-btn:hover {
+  background: #FFC0CB;
+}
+.hand-display {
+  margin: 10px 0;
+  padding: 10px;
+  border: 2px solid #8B0000;
+  border-radius: 8px;
+  background: #FFE4E1;
+  min-height: 50px;
+  font-size: 22px;
+  text-align: center;
+}
+.hand-tile {
+  display: inline-block;
+  padding: 5px;
+  margin: 3px;
+  font-size: 22px;
+  border: 2px solid #8B0000;
+  border-radius: 8px;
+  background: #FFE4E1;
+  cursor: pointer;
+}
+.controls {
+  text-align: center;
+  margin: 10px 0;
+}
+.control-btn {
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #FF1493;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.control-btn:hover {
+  background: #C71585;
+}
+.result {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 15px;
+  padding: 10px;
+  border: 2px dashed #B22222;
+  border-radius: 8px;
+  background: #FFF5F5;
+}
+.note {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  color: #555;
+}
