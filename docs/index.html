@@ -3,51 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>麻雀 待ち配牌チェッカー</title>
+  <title>麻雀 待ち牌チェッカー＆クイズ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>麻雀 待ち配牌チェッカー</h1>
+  <!-- タブメニュー -->
+  <div class="tab-container">
+    <button class="tab active" id="checkerTab">待ち牌チェッカー</button>
+    <button class="tab" id="quizTab">クイズ</button>
+  </div>
 
-    <!-- 牌ボタンエリア -->
+  <!-- 待ち牌チェッカー用セクション -->
+  <div id="checkerMode" class="mode">
+    <h2>待ち牌チェッカー</h2>
     <div class="tiles">
-      <button class="tile-btn" onclick="addTile('1')">1</button>
-      <button class="tile-btn" onclick="addTile('2')">2</button>
-      <button class="tile-btn" onclick="addTile('3')">3</button>
-      <button class="tile-btn" onclick="addTile('4')">4</button>
-      <button class="tile-btn" onclick="addTile('5')">5</button>
-      <button class="tile-btn" onclick="addTile('6')">6</button>
-      <button class="tile-btn" onclick="addTile('7')">7</button>
-      <button class="tile-btn" onclick="addTile('8')">8</button>
-      <button class="tile-btn" onclick="addTile('9')">9</button>
-      <button class="tile-btn" onclick="addTile('東')">東</button>
-      <button class="tile-btn" onclick="addTile('南')">南</button>
-      <button class="tile-btn" onclick="addTile('西')">西</button>
-      <button class="tile-btn" onclick="addTile('北')">北</button>
-      <button class="tile-btn" onclick="addTile('白')">白</button>
-      <button class="tile-btn" onclick="addTile('発')">発</button>
-      <button class="tile-btn" onclick="addTile('中')">中</button>
+      <!-- 数牌ボタン -->
+      <button class="tile-btn" onclick="addCheckerTile('1')">1</button>
+      <button class="tile-btn" onclick="addCheckerTile('2')">2</button>
+      <button class="tile-btn" onclick="addCheckerTile('3')">3</button>
+      <button class="tile-btn" onclick="addCheckerTile('4')">4</button>
+      <button class="tile-btn" onclick="addCheckerTile('5')">5</button>
+      <button class="tile-btn" onclick="addCheckerTile('6')">6</button>
+      <button class="tile-btn" onclick="addCheckerTile('7')">7</button>
+      <button class="tile-btn" onclick="addCheckerTile('8')">8</button>
+      <button class="tile-btn" onclick="addCheckerTile('9')">9</button>
+      <!-- 字牌ボタン（字牌は1種類） -->
+      <button class="tile-btn" onclick="addCheckerTile('字')">字</button>
     </div>
-
-    <!-- 入力済み配牌表示 -->
-    <div class="hand-display" id="handDisplay">
+    <div class="hand-display" id="checkerHandDisplay">
       ※ここに配牌が表示されます
     </div>
-
-    <!-- コントロールボタン -->
     <div class="controls">
-      <button class="control-btn" onclick="clearHand()">クリア</button>
+      <button class="control-btn" onclick="clearChecker()">クリア</button>
     </div>
-
-    <!-- 待ち結果表示 -->
-    <div class="result" id="result">
+    <div class="result" id="checkerResult">
       待ち牌がここに表示されます
     </div>
+  </div>
 
-    <div class="note">
-      ※入力は、1,4,7,10,13枚のいずれかにしてください。<br>
-      （不足分は既に面子完成済みとみなします）
+  <!-- クイズ用セクション -->
+  <div id="quizMode" class="mode" style="display: none;">
+    <h2>待ちクイズ</h2>
+    <div class="quiz-hand" id="quizHand">
+      <!-- ここに13枚の待ち配牌が表示されます -->
+    </div>
+    <div class="controls">
+      <button class="control-btn" id="showResultBtn">結果を表示</button>
+      <button class="control-btn" id="nextBtn">次へ</button>
+    </div>
+    <div class="answer" id="quizAnswer">
+      <!-- 正解（待ち牌）が表示されます -->
     </div>
   </div>
 
